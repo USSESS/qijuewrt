@@ -72,3 +72,24 @@ cat > package/base-files/files/etc/banner << "EOF"
              KiJueWrt 25.0.0.1
 =========================================================
 EOF
+
+# ====================== GRUB开机背景配置 1024×768通用版 ======================
+GRUB_CFG="${GITHUB_WORKSPACE}/openwrt/package/boot/grub2/files/grub/grub.cfg"
+
+# 将背景图片复制到grub打包目录
+cp "${GITHUB_WORKSPACE}/openwrt/files/grub-bg.png" "${GITHUB_WORKSPACE}/openwrt/package/boot/grub2/files/grub/"
+
+# 设置图形输出终端，优先1024x768，硬件不支持自动降级
+sed -i '/^set timeout/a\set gfxmode=1024x768,auto' "$GRUB_CFG"
+sed -i '/^set timeout/a\terminal_output gfxterm' "$GRUB_CFG"
+
+# 设置背景图与主题模式
+sed -i '/^set timeout/a\set background_image="grub-bg.png"' "$GRUB_CFG"
+sed -i '/^set timeout/a\set theme_mode="prefer-dark"' "$GRUB_CFG"
+
+# 设置菜单文字颜色，防止和图片融合看不清字
+sed -i '/^set timeout/a\set color_normal=white/black' "$GRUB_CFG"
+sed -i '/^set timeout/a\set color_highlight=cyan/blue' "$GRUB_CFG"
+
+# 修改GRUB菜单等待时间，默认5秒改为2秒
+sed -i 's/set timeout=5/set timeout=2/' "$GRUB_CFG"
