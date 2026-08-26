@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# 1. 系统名称替换（保持原有配置）
+# 1. 系统名称替换（这里补上了修改主机名的代码，确保网页左上角和右上角彻底变成 KiJueWrt）
 sed -i 's/ImmortalWrt/KiJueWrt/g' package/base-files/files/etc/openwrt_release
 sed -i 's/ImmortalWrt/KiJueWrt/g' package/base-files/files/etc/banner
+sed -i 's/OpenWrt/KiJueWrt/g' package/base-files/files/bin/config_generate
 grep -r "ImmortalWrt" feeds/luci -l 2>/dev/null | xargs sed -i 's/ImmortalWrt/KiJueWrt/g' 2>/dev/null
 
 # 2. 设置 x86-64 架构
