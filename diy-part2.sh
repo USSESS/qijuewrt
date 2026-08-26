@@ -19,7 +19,7 @@ echo 'CONFIG_TARGET_x86_64_Generic=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-mwan3=y' >> .config
 echo 'CONFIG_PACKAGE_mwan3=y' >> .config
 
-# 6. 启用 fwx 相关插件 (包含截图新增的 app-center 和 network)
+# 6. 启用 fwx 相关插件
 echo 'CONFIG_PACKAGE_luci-app-fwx-dashboard=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-fwx-dashboard-setting=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-fwx-feature=y' >> .config
@@ -32,3 +32,7 @@ echo 'CONFIG_PACKAGE_luci-app-fwx-system=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-fwx-user-record=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-fwx-app-center=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-fwx-network=y' >> .config
+
+# 7. 启用基础系统中文语言包
+echo 'CONFIG_PACKAGE_luci-i18n-base-zh-cn=y' >> .config
+echo 'CONFIG_PACKAGE_luci-i18n-firewall-zh-cn=y' >> .config
