@@ -47,7 +47,12 @@ echo 'CONFIG_PACKAGE_luci-lib-xterm=y' >> .config
 echo 'CONFIG_PACKAGE_luci-i18n-base-zh-cn=y' >> .config
 echo 'CONFIG_PACKAGE_luci-i18n-firewall-zh-cn=y' >> .config
 
-# 9. 覆盖开机 LOGO（KiJueWrt 方块艺术字定制版）
+# 9. 启用 luci-theme-edge 主题并设为默认（请确保下方没有 argon 等旧主题的代码）
+echo 'CONFIG_PACKAGE_luci-theme-edge=y' >> .config
+# 强制将默认主题改为 edge（默认是 bootstrap）
+sed -i "s/bootstrap/edge/g" feeds/luci/modules/luci-base/root/etc/config/luci
+
+# 10. 覆盖开机 LOGO（KiJueWrt 方块艺术字定制版）
 cat > package/base-files/files/etc/banner << "EOF"
 ░██     ░██ ░██    ░█████                       ░██       ░██             ░██    
 ░██    ░██           ░██                        ░██       ░██             ░██    
