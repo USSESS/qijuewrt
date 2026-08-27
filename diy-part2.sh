@@ -12,9 +12,9 @@ sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
 # 设置默认主机名 KiJueWrt
 sed -i 's/set system.@system\[-1\].hostname=.*/set system.@system[0].hostname='\''KiJueWrt'\''/g' package/base-files/files/bin/config_generate
 
-# ========== uci‑defaults 开机脚本：默认中文+时区 ==========
+# ========== uci‑defaults 开机脚本：默认中文+时区【已修正 zh_cn 下划线】 ==========
 cat > package/base-files/files/etc/uci-defaults/99-kijuewrt <<"UCIEOF"
-uci set luci.main.lang='zh-cn'
+uci set luci.main.lang='zh_cn'
 uci set system.@system[0].timezone='CST-8'
 uci set system.@system[0].zonename='Asia/Shanghai'
 uci set luci.main.mediaurlbase='/luci-static/edge'
