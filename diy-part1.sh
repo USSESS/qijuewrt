@@ -13,7 +13,9 @@ grep -q "^src-git nas_luci" feeds.conf.default || echo "src-git nas_luci https:/
 [ -d "package/luci-theme-edge" ] && rm -rf package/luci-theme-edge
 git clone -b master https://github.com/USSESS/luci-theme-edge.git package/luci-theme-edge
 
-# ========== 3. （可选）下载自定义背景图到 edge 主题目录 ==========
-# BG_DIR="package/luci-theme-edge/htdocs/luci-static/edge/background"
-# mkdir -p "${BG_DIR}"
-# curl -L -o "${BG_DIR}/background.jpg" "你的图片直链"
+# diy-part1.sh：添加iStore源 + 使用自己修改的luci-theme-edge
+echo 'src-git istore https://github.com/linkease/istore-packages.git;main' >> feeds.conf.default
+
+# 删除feeds中原有的edge，替换为你自己改好的仓库
+sed -i '/luci-theme-edge/d' feeds.conf.default
+echo "src-git luci-theme-edge https://github.com/USSESS/luci-theme-edge.git" >> feeds.conf.default
