@@ -3,11 +3,6 @@
 # diy-part2.sh — KiJueWrt 定制：系统改名 + 插件配置 + 默认主题 + 开机 banner
 # 在 ImmortalWrt 源码根目录执行（feeds 已 install 之后）
 #
-
-# ========== 0. 清空旧 .config，防止残留配置干扰 ==========
-rm -f .config
-touch .config
-
 # ========== 1. 系统名称替换（网页左上角/右上角 + 版本文件） ==========
 sed -i 's/ImmortalWrt/KiJueWrt/g' package/base-files/files/etc/openwrt_release
 sed -i 's/OpenWrt/KiJueWrt/g' package/base-files/files/bin/config_generate
@@ -21,45 +16,32 @@ echo 'CONFIG_TARGET_x86_64_Generic=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-mwan3=y' >> .config
 echo 'CONFIG_PACKAGE_mwan3=y' >> .config
 
-# ========== 4. 启用 fwx 全套行为管理插件 ==========
-echo 'CONFIG_PACKAGE_luci-app-fwx-dashboard=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-dashboard-setting=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-feature=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-macfilter=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-session-stat=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-record=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-record-whitelist=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-resources=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-system=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-user-record=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-app-center=y' >> .config
-echo 'CONFIG_PACKAGE_luci-app-fwx-network=y' >> .config
+# ========== ⚠️【已删除fwx全套】没有源码，不能开启，否则编译报错 ==========
 
-# ========== 5. 启用 iStore 应用商店及必备组件 ==========
+# ========== 4. 启用 iStore 应用商店及必备组件 ==========
 echo 'CONFIG_PACKAGE_luci-app-store=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-istorex=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-quickstart=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-linkease=y' >> .config
 echo 'CONFIG_PACKAGE_luci-app-ddnsto=y' >> .config
 
-# ========== 6. iStore 汉化包 ==========
+# ========== 5. iStore 汉化包 ==========
 echo 'CONFIG_PACKAGE_luci-i18n-istorex-zh-cn=y' >> .config
 echo 'CONFIG_PACKAGE_luci-i18n-quickstart-zh-cn=y' >> .config
 
-# ========== 7. iStore 底层依赖 ==========
+# ========== 6. iStore 底层依赖 ==========
 echo 'CONFIG_PACKAGE_luci-compat=y' >> .config
 echo 'CONFIG_PACKAGE_luci-lib-taskd=y' >> .config
 echo 'CONFIG_PACKAGE_luci-lib-xterm=y' >> .config
 
-# ========== 8. 基础系统中文语言包 ==========
+# ========== 7. 基础系统中文语言包 ==========
 echo 'CONFIG_PACKAGE_luci-i18n-base-zh-cn=y' >> .config
 echo 'CONFIG_PACKAGE_luci-i18n-firewall-zh-cn=y' >> .config
 
-# ========== 9. 启用 edge 主题并精准设为默认（不再全局 sed 替换） ==========
+# ========== 8. 启用 edge主题 ==========
 echo 'CONFIG_PACKAGE_luci-theme-edge=y' >> .config
-sed -i '/option theme/c\        option theme "edge"' feeds/luci/modules/luci-base/root/etc/config/luci
 
-# ========== 10. 覆盖开机 LOGO（KiJueWrt 方块艺术字） ==========
+# ========== 9. 覆盖开机 LOGO（KiJueWrt 方块艺术字） ==========
 cat > package/base-files/files/etc/banner << "EOF"
 ░██     ░██ ░██    ░█████                       ░██       ░██             ░██
 ░██    ░██           ░██                        ░██       ░██             ░██
