@@ -1,72 +1,62 @@
-#
-# https://github.com/P3TERX/Actions-OpenWrt
-#
-name: OpenWrt Builder
+name: KiJueWrt
 on:
-  repository_dispatch:
   workflow_dispatch:
 
 env:
-  REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: master
-  FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: .config
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
-  UPLOAD_BIN_DIR: true
+  IMM_REPO: https://github.com/immortalwrt/immortalwrt
+  IMM_BRANCH: master
 
 jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: 查看工作空间
-        uses: actions/checkout@main
+      - name: 拉取本仓库配置脚本
+        uses: actions/checkout@v4
 
-      - name: 初始化编译环境
-        uses: P3TERX/setup-openwrt-build-env@main
-
-      - name: 克隆源码
-        uses: P3TERX/clone-openwrt-source@main
-
-      - name: 加载自定义信息源
+      - name: 安装编译依赖
         run: |
-          chmod +x ${{ env.DIY_P1_SH }}
-          ./${{ env.DIY_P1_SH }}
+          sudo apt update
+          sudo apt install -y build-essential flex bison gawk gcc-multilib g++-multilib \
+          gettext git libncurses-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget
 
-      - name: 更新信息流 feeds
-        run: ./scripts/feeds update -a && ./scripts/feeds install -a
+      - name: 克隆 ImmortalWrt 源码
+        run: |
+          git clone --depth 1 -b ${{ env.IMM_BRANCH }} ${{ env.IMM_REPO }} openwrt
+          cd openwrt
 
-      - name: 加载自定义配置
-        uses: P3TERX/load-openwrt-config@main
+      - name: 执行 diy‑part1.sh 添加feeds源(iStore+你的edge主题)
+        run: |
+          cd openwrt
+          chmod +x ../diy-part1.sh
+          ../diy-part1.sh
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
 
-      - name: 下载软件包
-        uses: P3TERX/download-openwrt-packages@main
+      - name: 导入.config配置，执行diy‑part2.sh（改名KiJueWrt、banner、默认主题）
+        run: |
+          cd openwrt
+          cp ../.config .config
+          chmod +x ../diy-part2.sh
+          ../diy-part2.sh
+          make defconfig
+
+      - name: 下载全部源码包
+        run: |
+          cd openwrt
+          make download -j8
 
       - name: 编译固件
-        uses: P3TERX/build-openwrt@main
-
-      - name: 执行DIY part2
         run: |
-          chmod +x ${{ env.DIY_P2_SH }}
-          ./${{ env.DIY_P2_SH }}
+          cd openwrt
+          make -j$(nproc) || make -j1 V=s
 
-      - name: 检查空间
-        run: df -h
-
-      - name: 整理文件
+      - name: 收集固件输出
         run: |
-          if [ -d openwrt/bin/targets/*/* ]; then
-            cd openwrt/bin/targets/*/*
-          fi
+          mkdir -p ./artifacts
+          cp -r openwrt/bin/targets/x86/64/* ./artifacts/
 
-      - name: 上传固件目录
-        uses: actions/upload-artifact@main
+      - name: 上传固件产物
+        uses: actions/upload-artifact@v4
         with:
-          name: KiJueWrt_bin
-          path: openwrt/bin
-
-      - name: 结账
-        uses: P3TERX/post-openwrt-build@main
-
-      - name: 完成工作
-        run: echo "KiJueWrt编译结束"
+          name: KiJueWrt‑IMM‑x86_64
+          path: ./artifacts/
