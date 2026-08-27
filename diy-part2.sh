@@ -25,6 +25,13 @@ UCIEOF
 sed -i 's|ImmortalWrt|KiJueWrt|g' feeds/edge_theme/luci-theme-edge/luci-theme-edge.lua 2>/dev/null || true
 sed -i 's|OpenWrt|KiJueWrt|g' feeds/edge_theme/luci-theme-edge/luci-theme-edge.lua 2>/dev/null || true
 
+# 修改固件版本 KiJueWrt
+cat > $TARGET_DIR/etc/openwrt_release <<EOF
+DISTRIB_ID='KiJueWrt'
+DISTRIB_RELEASE='25.0.0.1'
+DISTRIB_CODENAME='KiJue'
+DISTRIB_DESCRIPTION='KiJueWrt Built by GitHub Actions'
+
 # ========== SSH登录Banner KiJueWrt点阵 ==========
 cat > package/base-files/files/etc/banner <<"EOF"
 ░██     ░██ ░██    ░█████                       ░██       ░██             ░██
