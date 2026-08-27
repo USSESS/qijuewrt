@@ -1,15 +1,19 @@
 #!/bin/bash
 set -e
-
-# iStore软件中心源
+# iStore软件中心源 linkease官方 main分支
 echo "src-git istore https://github.com/linkease/istore.git;main" >> feeds.conf.default
+# 一键上网设置向导 netwizard 源
+echo "src-git netwizard https://github.com/sirpdboy/luci-app-netwizard.git;main" >> feeds.conf.default
 
-# 【已全部删除远程拉取edge主题代码，完全使用本仓库本地修改好的主题，不会被网上源码覆盖】
-# 把仓库内package下整套edge主题复制到编译环境
-cp -r $GITHUB_WORKSPACE/package/luci-theme-edge-master package/luci-theme-edge
+# 本地导入仓库内定制Edge主题
+if [ -d "$GITHUB_WORKSPACE/package/luci-theme-edge-master" ];then
+    cp -r $GITHUB_WORKSPACE/package/luci-theme-edge-master package/luci-theme-edge
+else
+    echo "警告：本地Edge主题文件夹缺失，跳过复制"
+fi
 
-# 更新feeds
+# 更新全部feeds
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
-echo "diy‑part1.sh执行完毕：本地定制edge主题已导入"
+echo "diy‑part1.sh执行完毕：iStore、上网向导源、本地Edge主题已加载"
