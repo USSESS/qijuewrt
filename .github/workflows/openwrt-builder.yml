@@ -84,6 +84,25 @@ jobs:
         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+    # 生成图形安装ISO，istoreos同款安装向导，修复分支为master
+    - name: Build Ventoy Installer ISO
+      if: steps.compile.outputs.status == 'success'
+      run: |
+        cd openwrt
+        git clone -b master https://github.com/wukongdaily/img-installer.git
+        cd bin/targets/*/*
+        IMG_PATH=$(pwd)/$(ls *squashfs-combined-efi.img 2>/dev/null || ls *squashfs-combined.img 2>/dev/null || ls *.img | head -n 1)
+        echo "找到固件路径: $IMG_PATH"
+        cd $GITHUB_WORKSPACE/openwrt
+        chmod +x img-installer/build_custom_iso.sh
+        sudo bash img-installer/build_custom_iso.sh "$IMG_PATH"
+        INSTALLER_ISO=$(ls img-installer/*.iso 2>/dev/null || ls *.iso 2>/dev/null)
+        if [ -n "$INSTALLER_ISO" ]; then
+          cp "$INSTALLER_ISO" bin/targets/*/*/
+          echo "✅ ISO 已复制到固件目录"
+        else
+          echo "⚠️ 未找到生成的 ISO 文件，请检查 img-installer 日志"
+        fi
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
