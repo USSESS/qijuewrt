@@ -1,14 +1,15 @@
 #!/bin/bash
 set -e
-
 # ==========系统全局名称 KiJueWrt ==========
 # 修改openwrt_release 系统信息（源码层）
 sed -i 's|ImmortalWrt|KiJueWrt|g' package/base-files/files/etc/openwrt_release
 sed -i 's|OpenWrt|KiJueWrt|g' package/base-files/files/etc/openwrt_release
+sed -i 's|DISTRIB_RELEASE=.*|DISTRIB_RELEASE='"'"'25.0.0.1'"'"'|g' package/base-files/files/etc/openwrt_release
+sed -i 's|DISTRIB_CODENAME=.*|DISTRIB_CODENAME='"'"'KiJue'"'"'|g' package/base-files/files/etc/openwrt_release
+sed -i 's|DISTRIB_DESCRIPTION=.*|DISTRIB_DESCRIPTION='"'"'KiJueWrt Built by GitHub Actions'"'"'|g' package/base-files/files/etc/openwrt_release
 
 # 修改默认LAN IP为10.10.10.1
 sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
-
 # 设置默认主机名 hostname = KiJueWrt
 sed -i 's/set system.@system\[-1\].hostname=.*/set system.@system[0].hostname='\''KiJueWrt'\''/g' package/base-files/files/bin/config_generate
 
@@ -35,13 +36,5 @@ cat > package/base-files/files/etc/banner <<"BANNEREOF"
              KiJueWrt 25.0.0.1
 =========================================================
 BANNEREOF
-
-# 镜像打包阶段最终覆盖固件版本（防止base-files复原）
-cat > $TARGET_DIR/etc/openwrt_release <<FINEOF
-DISTRIB_ID='KiJueWrt'
-DISTRIB_RELEASE='25.0.0.1'
-DISTRIB_CODENAME='KiJue'
-DISTRIB_DESCRIPTION='KiJueWrt Built by GitHub Actions'
-FINEOF
 
 echo "diy‑part2 KiJueWrt全部设置完成"
