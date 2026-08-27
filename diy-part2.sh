@@ -5,23 +5,25 @@ set -e
 sed -i 's|ImmortalWrt|KiJueWrt|g' package/base-files/files/etc/openwrt_release
 sed -i 's|OpenWrt|KiJueWrt|g' package/base-files/files/etc/openwrt_release
 
-# 设置默认中文、上海时区
-sed -i "s/option lang='en'/option lang='zh_cn'/g" package/base-files/files/etc/uci-defaults/99-default-settings
-sed -i "s/option timezone='UTC'/option timezone='Asia\/Shanghai'/g" package/base-files/files/etc/uci-defaults/99-default-settings
-
-# 设置开机默认使用 edge主题（你的定制主题）
-sed -i "/config theme/d" package/base-files/files/etc/uci-defaults/99-default-settings
-echo -e "config theme\n\toption rtheme 'edge'" >> package/base-files/files/etc/uci-defaults/99-default-settings
-
-# 修改LuCI登录页面标题为 KiJueWrt，容错防止文件不存在编译中断
-sed -i 's|ImmortalWrt|KiJueWrt|g' feeds/edge_theme/luci-theme-edge/luci-theme-edge.lua 2>/dev/null || true
-sed -i 's|OpenWrt|KiJueWrt|g' feeds/edge_theme/luci-theme-edge/luci-theme-edge.lua 2>/dev/null || true
-
 # 修改默认LAN IP为10.10.10.1
 sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
 
 # 设置默认主机名 hostname = KiJueWrt
 sed -i "s/set system.@system\[-1\].hostname=.*/set system.@system[-1].hostname='KiJueWrt'/g" package/base-files/files/bin/config_generate
+
+# ==========新建自定义uci-default脚本（替代原来修改99-default-settings）==========
+cat > package/base-files/files/etc/uci-defaults/99-kijuewrt <<"UCIEOF"
+uci set luci.main.lang='zh_cn'
+uci set system.@system[0].timezone='CST-8'
+uci set system.@system[0].zonename='Asia/Shanghai'
+uci set luci_themes.@theme[0].rtheme='edge'
+uci commit luci
+uci commit system
+UCIEOF
+
+# 修改LuCI登录页面标题为 KiJueWrt，容错防止文件不存在编译中断
+sed -i 's|ImmortalWrt|KiJueWrt|g' feeds/edge_theme/luci-theme-edge/luci-theme-edge.lua 2>/dev/null || true
+sed -i 's|OpenWrt|KiJueWrt|g' feeds/edge_theme/luci-theme-edge/luci-theme-edge.lua 2>/dev/null || true
 
 # ========== SSH登录Banner KiJueWrt点阵 ==========
 cat > package/base-files/files/etc/banner <<"EOF"
