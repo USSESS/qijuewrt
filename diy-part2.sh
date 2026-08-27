@@ -17,13 +17,11 @@ echo -e "config theme\n\toption rtheme 'edge'" >> package/base-files/files/etc/u
 sed -i 's|ImmortalWrt|KiJueWrt|g' feeds/edge_theme/luci-theme-edge/luci-theme-edge.lua 2>/dev/null || true
 sed -i 's|OpenWrt|KiJueWrt|g' feeds/edge_theme/luci-theme-edge/luci-theme-edge.lua 2>/dev/null || true
 
-# 修改默认IP为10.10.10.1
+# 修改默认LAN IP为10.10.10.1
 sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
 
 # 设置默认主机名 hostname = KiJueWrt
 sed -i "s/set system.@system\[-1\].hostname=.*/set system.@system[-1].hostname='KiJueWrt'/g" package/base-files/files/bin/config_generate
-
-EOF
 
 # ========== SSH登录Banner KiJueWrt点阵 ==========
 cat > package/base-files/files/etc/banner <<"EOF"
