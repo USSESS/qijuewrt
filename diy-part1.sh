@@ -16,4 +16,12 @@ fi
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
+./scripts/feeds update -a
+./scripts/feeds install -a
+#强制安装，避免编译漏打包
+./scripts/feeds install luci-app-store
+./scripts/feeds install luci-app-netwizard
+./scripts/feeds install luci-i18n-netwizard-zh-cn
+
+
 echo "diy‑part1.sh执行完毕：iStore、上网向导源、本地Edge主题已加载"
