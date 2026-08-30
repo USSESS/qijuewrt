@@ -14,11 +14,12 @@ EOF
 if ! uci -q get kijue.theme >/dev/null 2>&1; then
     uci batch <<EOF
 set kijue.theme=kijue
-set kijue.theme.background='light'
+set kijue.theme.background='image'
+set kijue.theme.bg_image='/luci-static/kijue/img/bg.jpg'
 set kijue.theme.bg_color1='#dbeafe'
 set kijue.theme.bg_color2='#f0f9ff'
 set kijue.theme.accent='#3b82f6'
-set kijue.theme.card_opacity='0.82'
+set kijue.theme.card_opacity='0.72'
 commit kijue
 EOF
 fi
