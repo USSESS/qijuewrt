@@ -1,0 +1,79 @@
+<%#
+KiJueWrt - 设备页面
+-%>
+<% local current_page = 'devices' %>
+<%+themes/kijue/header%>
+
+<h1 class="kijue-page-title">&#128187; 设备 <span class="subtitle">在线设备与流量</span></h1>
+
+<div class="kijue-sys-grid">
+    <div class="kijue-card kijue-sys-card">
+        <div class="kijue-sys-header">
+            <span class="kijue-sys-label">在线设备</span>
+            <span class="kijue-sys-value" id="kijue-dev-count">--</span>
+        </div>
+        <div class="kijue-progress"><div class="kijue-progress-bar" id="kijue-dev-bar" style="width:0%"></div></div>
+        <div style="margin-top:8px;font-size:12px;color:var(--kijue-text3);">当前连接设备数</div>
+    </div>
+    <div class="kijue-card kijue-sys-card">
+        <div class="kijue-sys-header">
+            <span class="kijue-sys-label">活动连接</span>
+            <span class="kijue-sys-value" id="kijue-conn-count">--</span>
+        </div>
+        <div class="kijue-progress"><div class="kijue-progress-bar" id="kijue-conn-bar" style="width:0%;background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div>
+        <div style="margin-top:8px;font-size:12px;color:var(--kijue-text3);">网络连接数</div>
+    </div>
+    <div class="kijue-card kijue-sys-card">
+        <div class="kijue-sys-header">
+            <span class="kijue-sys-label">下载速率</span>
+            <span class="kijue-sys-value" id="kijue-dl-rate">-- Mbps</span>
+        </div>
+        <div class="kijue-progress"><div class="kijue-progress-bar" id="kijue-dl-bar" style="width:0%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+        <div style="margin-top:8px;font-size:12px;color:var(--kijue-text3);">WAN 口实时下载</div>
+    </div>
+</div>
+
+<h2 class="kijue-section-title">&#128295; 设备工具</h2>
+<div class="kijue-grid">
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "status", "overview")%>">
+        <div class="kijue-func-icon">&#128200;</div>
+        <div class="kijue-func-name">总览</div>
+        <div class="kijue-func-desc">系统状态</div>
+    </a>
+    <% local fs = require "nixio.fs"
+       if fs.access("/usr/sbin/nlbwmon") then %>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "nlbw", "display")%>">
+        <div class="kijue-func-icon">&#128202;</div>
+        <div class="kijue-func-name">流量监控</div>
+        <div class="kijue-func-desc">带宽使用统计</div>
+    </a>
+    <% end %>
+    <% if fs.access("/usr/bin/speedtest") or fs.access("/usr/bin/speedtest-netperf") then %>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "nlbw", "speedtest")%>">
+        <div class="kijue-func-icon">&#128640;</div>
+        <div class="kijue-func-name">网速测试</div>
+        <div class="kijue-func-desc">带宽测速</div>
+    </a>
+    <% end %>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "status", "routes")%>">
+        <div class="kijue-func-icon">&#128739;</div>
+        <div class="kijue-func-name">路由表</div>
+        <div class="kijue-func-desc">路由信息</div>
+    </a>
+</div>
+
+<h2 class="kijue-section-title">&#128241; 在线设备列表 <span class="count" id="kijue-device-list-count">--</span></h2>
+<div class="kijue-device-list" id="kijue-device-list">
+    <div class="kijue-empty" style="grid-column:1/-1;">
+        <div class="kijue-empty-icon">&#128187;</div>
+        <p>加载中...</p>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    KiJueTheme.init('devices');
+});
+</script>
+
+<%+themes/kijue/footer%>

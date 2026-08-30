@@ -1,0 +1,57 @@
+<%#
+KiJueWrt - 应用页面
+-%>
+<% local current_page = 'apps' %>
+<%+themes/kijue/header%>
+
+<h1 class="kijue-page-title">&#128230; 应用 <span class="subtitle">已安装的软件与服务</span></h1>
+
+<div class="kijue-grid" style="margin-bottom:28px;">
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "store")%>" style="border:2px dashed var(--kijue-accent);background:rgba(59,130,246,0.05);">
+        <div class="kijue-func-icon" style="background:linear-gradient(135deg,var(--kijue-accent),var(--kijue-accent2));color:#fff;">&#128722;</div>
+        <div class="kijue-func-name">应用商店</div>
+        <div class="kijue-func-desc">安装更多软件</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "opkg")%>">
+        <div class="kijue-func-icon">&#128230;</div>
+        <div class="kijue-func-name">软件包</div>
+        <div class="kijue-func-desc">OPKG 管理</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "services")%>">
+        <div class="kijue-func-icon">&#9881;</div>
+        <div class="kijue-func-name">服务管理</div>
+        <div class="kijue-func-desc">全部服务</div>
+    </a>
+</div>
+
+<h2 class="kijue-section-title">&#128230; 已安装应用 <span class="count" id="kijue-all-apps-count">--</span></h2>
+<div class="kijue-grid" id="kijue-all-apps">
+    <div class="kijue-empty" style="grid-column:1/-1;">
+        <div class="kijue-empty-icon">&#128230;</div>
+        <p>加载中...</p>
+    </div>
+</div>
+
+<h2 class="kijue-section-title">&#127760; 代理与网络 <span class="count" id="kijue-proxy-count">--</span></h2>
+<div class="kijue-grid" id="kijue-proxy-apps">
+    <div class="kijue-empty" style="grid-column:1/-1;">
+        <div class="kijue-empty-icon">&#128268;</div>
+        <p>暂无代理工具</p>
+    </div>
+</div>
+
+<h2 class="kijue-section-title">&#127916; 下载与媒体 <span class="count" id="kijue-media-count">--</span></h2>
+<div class="kijue-grid" id="kijue-media-apps">
+    <div class="kijue-empty" style="grid-column:1/-1;">
+        <div class="kijue-empty-icon">&#127911;</div>
+        <p>暂无下载/媒体工具</p>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    KiJueTheme.init('apps');
+});
+</script>
+
+<%+themes/kijue/footer%>

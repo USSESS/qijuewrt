@@ -1,0 +1,27 @@
+#!/bin/sh
+# KiJueWrt Theme - 首次启动自动配置
+
+[ -d /www/luci-static/kijue ] || exit 0
+[ -f /usr/lib/lua/luci/view/themes/kijue/header.htm ] || exit 0
+
+uci batch <<EOF
+set luci.main.mediaurlbase='/luci-static/kijue'
+set luci.main.home='/cgi-bin/luci/admin/kijue/dashboard'
+set luci.main.lang='zh_cn'
+commit luci
+EOF
+
+if ! uci -q get kijue.theme >/dev/null 2>&1; then
+    uci batch <<EOF
+set kijue.theme=kijue
+set kijue.theme.background='light'
+set kijue.theme.bg_color1='#dbeafe'
+set kijue.theme.bg_color2='#f0f9ff'
+set kijue.theme.accent='#3b82f6'
+set kijue.theme.card_opacity='0.82'
+commit kijue
+EOF
+fi
+
+rm -f /tmp/luci-* /tmp/luci2-* 2>/dev/null
+exit 0
