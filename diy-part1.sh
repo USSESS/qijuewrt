@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
+cd openwrt
+
 # 添加feeds源
 echo "src-git netwizard https://github.com/sirpdboy/luci-app-netwizard.git;main" >> feeds.conf.default
 echo "src-git istore https://github.com/linkease/istore.git;main" >> feeds.conf.default
 
-# KiJueWrt主题
-mv luci-theme-kijue package/
+# KiJueWrt主题（用$GITHUB_WORKSPACE绝对路径）
+mv "$GITHUB_WORKSPACE/luci-theme-kijue" package/
 echo "OK:KiJueWrt主题移动完成"
 
 # 更新安装feeds
