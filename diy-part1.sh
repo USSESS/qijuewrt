@@ -19,4 +19,7 @@ fi
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
+# 加上这一行
+mv luci-theme-kijue package/
+
 echo "diy‑part1.sh执行完毕"
