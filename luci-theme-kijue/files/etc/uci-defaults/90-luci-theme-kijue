@@ -1,0 +1,18 @@
+#!/bin/sh
+# KiJueWrt Theme 首次启动自动配置
+
+uci set luci.main.mediaurlbase='/luci-static/kijue'
+uci set luci.main.home='/cgi-bin/luci/admin/kijue/dashboard'
+
+if ! uci show kijue >/dev/null 2>&1; then
+    uci set kijue.theme=kijue
+    uci set kijue.theme.background='light'
+    uci set kijue.theme.bg_color1='#dbeafe'
+    uci set kijue.theme.bg_color2='#f0f9ff'
+    uci set kijue.theme.accent='#3b82f6'
+    uci set kijue.theme.card_opacity='0.82'
+fi
+
+uci commit luci
+uci commit kijue 2>/dev/null || true
+exit 0
