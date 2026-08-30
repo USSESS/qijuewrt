@@ -1,0 +1,68 @@
+<%#
+KiJueWrt - 网络页面
+-%>
+<% local current_page = 'network' %>
+<%+themes/kijue/header%>
+
+<h1 class="kijue-page-title">&#127760; 网络 <span class="subtitle">网络配置与管理</span></h1>
+
+<h2 class="kijue-section-title">&#9881; 基础网络</h2>
+<div class="kijue-grid">
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "network")%>">
+        <div class="kijue-func-icon">&#128268;</div>
+        <div class="kijue-func-name">接口管理</div>
+        <div class="kijue-func-desc">LAN/WAN 配置</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "network", "wireless")%>">
+        <div class="kijue-func-icon">&#128246;</div>
+        <div class="kijue-func-name">无线设置</div>
+        <div class="kijue-func-desc">WiFi 配置</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "network", "firewall")%>">
+        <div class="kijue-func-icon">&#128737;</div>
+        <div class="kijue-func-name">防火墙</div>
+        <div class="kijue-func-desc">规则/端口转发</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "network", "dhcp")%>">
+        <div class="kijue-func-icon">&#128200;</div>
+        <div class="kijue-func-name">DHCP/DNS</div>
+        <div class="kijue-func-desc">地址分配</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "network", "routes")%>">
+        <div class="kijue-func-icon">&#128739;</div>
+        <div class="kijue-func-name">静态路由</div>
+        <div class="kijue-func-desc">路由表</div>
+    </a>
+    <% local fs = require "nixio.fs"
+       if fs.access("/usr/sbin/miniupnpd") or fs.access("/usr/bin/miniupnpd") then %>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "network", "upnp")%>">
+        <div class="kijue-func-icon">&#128268;</div>
+        <div class="kijue-func-name">UPnP</div>
+        <div class="kijue-func-desc">自动端口映射</div>
+    </a>
+    <% end %>
+</div>
+
+<h2 class="kijue-section-title">&#128640; 网络工具 <span class="count" id="kijue-net-apps-count">--</span></h2>
+<div class="kijue-grid" id="kijue-net-apps">
+    <div class="kijue-empty">
+        <div class="kijue-empty-icon">&#128230;</div>
+        <p>暂无额外网络工具，安装后自动显示</p>
+    </div>
+</div>
+
+<h2 class="kijue-section-title">&#128225; 接口状态</h2>
+<div class="kijue-grid" id="kijue-interfaces" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">
+    <div class="kijue-card kijue-func-card">
+        <div class="kijue-func-icon kijue-skeleton" style="width:52px;height:52px;"></div>
+        <div class="kijue-skeleton" style="height:14px;width:60px;"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    KiJueTheme.init('network');
+});
+</script>
+
+<%+themes/kijue/footer%>

@@ -1,0 +1,104 @@
+<%#
+KiJueWrt - 系统页面
+-%>
+<% local current_page = 'system' %>
+<%+themes/kijue/header%>
+
+<h1 class="kijue-page-title">&#9881; 系统 <span class="subtitle">系统管理与维护</span></h1>
+
+<div class="kijue-sys-grid">
+    <div class="kijue-card kijue-sys-card">
+        <div class="kijue-sys-header">
+            <span class="kijue-sys-label">CPU 使用率</span>
+            <span class="kijue-sys-value" id="kijue-sys-cpu">--%</span>
+        </div>
+        <div class="kijue-progress"><div class="kijue-progress-bar" id="kijue-sys-cpu-bar" style="width:0%"></div></div>
+        <div style="margin-top:8px;font-size:12px;color:var(--kijue-text3);" id="kijue-sys-cpu-model">--</div>
+    </div>
+    <div class="kijue-card kijue-sys-card">
+        <div class="kijue-sys-header">
+            <span class="kijue-sys-label">内存使用率</span>
+            <span class="kijue-sys-value" id="kijue-sys-mem">--%</span>
+        </div>
+        <div class="kijue-progress"><div class="kijue-progress-bar" id="kijue-sys-mem-bar" style="width:0%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+        <div style="margin-top:8px;font-size:12px;color:var(--kijue-text3);" id="kijue-sys-mem-model">--</div>
+    </div>
+    <div class="kijue-card kijue-sys-card">
+        <div class="kijue-sys-header">
+            <span class="kijue-sys-label">运行时间</span>
+            <span class="kijue-sys-value" id="kijue-sys-uptime" style="font-size:18px;">--</span>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:var(--kijue-text3);" id="kijue-sys-model">--</div>
+    </div>
+</div>
+
+<h2 class="kijue-section-title">&#9881; 系统管理</h2>
+<div class="kijue-grid">
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "system")%>">
+        <div class="kijue-func-icon">&#9881;</div>
+        <div class="kijue-func-name">系统设置</div>
+        <div class="kijue-func-desc">主机名/时区</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "flashops")%>">
+        <div class="kijue-func-icon">&#128190;</div>
+        <div class="kijue-func-name">固件升级</div>
+        <div class="kijue-func-desc">刷写固件</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "admin")%>">
+        <div class="kijue-func-icon">&#128274;</div>
+        <div class="kijue-func-name">管理权</div>
+        <div class="kijue-func-desc">密码/SSH</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "backup")%>">
+        <div class="kijue-func-icon">&#128190;</div>
+        <div class="kijue-func-name">备份恢复</div>
+        <div class="kijue-func-desc">配置备份</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "reboot")%>">
+        <div class="kijue-func-icon">&#128260;</div>
+        <div class="kijue-func-name">重启</div>
+        <div class="kijue-func-desc">系统重启</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "kijue")%>">
+        <div class="kijue-func-icon">&#127912;</div>
+        <div class="kijue-func-name">主题设置</div>
+        <div class="kijue-func-desc">背景/颜色</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "logs")%>">
+        <div class="kijue-func-icon">&#128220;</div>
+        <div class="kijue-func-name">系统日志</div>
+        <div class="kijue-func-desc">日志查看</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "commands")%>">
+        <div class="kijue-func-icon">&#128187;</div>
+        <div class="kijue-func-name">终端</div>
+        <div class="kijue-func-desc">命令行</div>
+    </a>
+</div>
+
+<h2 class="kijue-section-title">&#9200; 计划任务</h2>
+<div class="kijue-grid">
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "crontab")%>">
+        <div class="kijue-func-icon">&#9200;</div>
+        <div class="kijue-func-name">定时任务</div>
+        <div class="kijue-func-desc">Crontab</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "startup")%>">
+        <div class="kijue-func-icon">&#9654;</div>
+        <div class="kijue-func-name">启动项</div>
+        <div class="kijue-func-desc">开机启动</div>
+    </a>
+    <a class="kijue-card kijue-func-card" href="<%=luci.dispatcher.build_url("admin", "system", "leds")%>">
+        <div class="kijue-func-icon">&#128161;</div>
+        <div class="kijue-func-name">LED 配置</div>
+        <div class="kijue-func-desc">指示灯</div>
+    </a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    KiJueTheme.init('system');
+});
+</script>
+
+<%+themes/kijue/footer%>

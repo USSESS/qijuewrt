@@ -1,0 +1,93 @@
+<%#
+KiJueWrt Theme - Header
+-%>
+<%
+local page_title = "KiJueWrt"
+if title then
+    if type(title) == "table" then
+        local parts = {}
+        for _, t in ipairs(title) do table.insert(parts, tostring(t)) end
+        page_title = table.concat(parts, " - ") .. " - KiJueWrt"
+    else
+        page_title = tostring(title) .. " - KiJueWrt"
+    end
+end
+
+local fs = require "nixio.fs"
+local util = require "luci.sys"
+local terminal_url = luci.dispatcher.build_url("admin", "system", "system")
+local terminal_target = ""
+if fs.access("/usr/lib/lua/luci/controller/ttyd.lua") or fs.access("/usr/share/luci/controller/ttyd.lua") then
+    terminal_url = luci.dispatcher.build_url("admin", "system", "ttyd")
+else
+    local ttyd_pid = util.exec("pgrep ttyd 2>/dev/null | head -1")
+    if ttyd_pid and #ttyd_pid > 0 then
+        local host = luci.http.getenv("HTTP_HOST") or "10.10.10.1"
+        terminal_url = "http://" .. host .. ":7681"
+        terminal_target = "_blank"
+    end
+end
+
+local uci = require "luci.model.uci".cursor()
+local bg_mode = uci:get("kijue", "theme", "background") or "light"
+local bg_c1 = uci:get("kijue", "theme", "bg_color1") or "#bae6fd"
+local bg_c2 = uci:get("kijue", "theme", "bg_color2") or "#f0f9ff"
+local bg_img = uci:get("kijue", "theme", "bg_image") or ""
+local accent = uci:get("kijue", "theme", "accent") or "#3b82f6"
+local card_op = uci:get("kijue", "theme", "card_opacity") or "0.72"
+
+local bg_style = ""
+if bg_mode == "dark" then
+    bg_style = "background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);background-attachment:fixed;"
+elseif bg_mode == "image" and bg_img ~= "" then
+    bg_style = "background:url('" .. bg_img .. "') center/cover no-repeat fixed;background-attachment:fixed;"
+elseif bg_mode == "solid" then
+    bg_style = "background:" .. bg_c1 .. ";background-attachment:fixed;"
+else
+    bg_style = "background:linear-gradient(135deg," .. bg_c1 .. " 0%,#e0f2fe 25%," .. bg_c2 .. " 55%,#f8fafc 100%);background-attachment:fixed;"
+end
+-%>
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<title><%=page_title%></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="<%=media%>/css/kijue.css?v=1.1.0">
+<script src="<%=resource%>/cbi.js"></script>
+<script src="<%=media%>/js/kijue.js?v=1.1.0"></script>
+<style>
+body{<%=bg_style%>}
+:root{--kijue-accent:<%=accent%>;--kijue-card:rgba(255,255,255,<%=card_op%>);}
+</style>
+</head>
+<body data-page="<%=current_page or 'dashboard'%>">
+
+<header class="kijue-header">
+    <a href="<%=luci.dispatcher.build_url("admin", "kijue", "dashboard")%>" class="kijue-logo">
+        <div class="kijue-logo-icon">K</div>
+        <span>KiJueWrt</span>
+    </a>
+    <nav class="kijue-nav">
+        <a href="<%=luci.dispatcher.build_url("admin", "kijue", "dashboard")%>" class="kijue-nav-item <%if current_page == 'dashboard' then%>active<%end%>">首页</a>
+        <a href="<%=luci.dispatcher.build_url("admin", "kijue", "network")%>" class="kijue-nav-item <%if current_page == 'network' then%>active<%end%>">网络</a>
+        <a href="<%=luci.dispatcher.build_url("admin", "kijue", "devices")%>" class="kijue-nav-item <%if current_page == 'devices' then%>active<%end%>">设备</a>
+        <a href="<%=luci.dispatcher.build_url("admin", "kijue", "apps")%>" class="kijue-nav-item <%if current_page == 'apps' then%>active<%end%>">应用</a>
+        <a href="<%=luci.dispatcher.build_url("admin", "kijue", "system")%>" class="kijue-nav-item <%if current_page == 'system' then%>active<%end%>">系统</a>
+        <a href="<%=terminal_url%>" class="kijue-nav-item" <%if terminal_target ~= "" then%>target="<%=terminal_target%>"<%end%>>终端</a>
+    </nav>
+    <div class="kijue-header-right">
+        <a href="#" class="kijue-icon-btn" title="搜索" onclick="return false;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </a>
+        <a href="<%=luci.dispatcher.build_url("admin", "system", "kijue")%>" class="kijue-icon-btn" title="主题设置">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </a>
+        <a href="<%=luci.dispatcher.build_url("admin", "logout")%>" class="kijue-icon-btn" title="退出">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </a>
+    </div>
+</header>
+
+<main class="kijue-main">
