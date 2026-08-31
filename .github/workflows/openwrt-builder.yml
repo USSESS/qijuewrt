@@ -18,6 +18,19 @@ jobs:
           sudo apt install -y build-essential flex bison gawk gcc-multilib g++-multilib \
           gettext git libncurses-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget
 
+      - name: 清理磁盘空间（防止No space left）
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /usr/lib/heroku
+          sudo rm -rf /opt/hostedtoolcache
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+          echo "清理后磁盘空间："
+          df -h
+
       - name: 克隆 ImmortalWrt 源码（24.10 稳定分支）
         run: |
           git clone --depth 1 -b ${{ env.IMM_BRANCH }} ${{ env.IMM_REPO }} openwrt
