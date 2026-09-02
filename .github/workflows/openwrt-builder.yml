@@ -6,7 +6,7 @@ on:
     - cron: '0 18 * * 6'
 env:
   IMM_REPO: https://github.com/immortalwrt/immortalwrt
-  IMM_BRANCH: openwrt-25.12
+  IMM_BRANCH: openwrt-24.10
 jobs:
   build:
     runs-on: ubuntu-22.04
